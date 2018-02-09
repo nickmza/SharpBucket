@@ -103,6 +103,13 @@ namespace SharpBucket
             return (OAuthentication2)authenticator;
         }
 
+        public OAuthenticationToken OAuthenticationToken(string token)
+        {
+            authenticator = new OAuthenticationToken(token, _baseUrl);
+            ((OAuthenticationToken)authenticator).GetToken();
+            return (OAuthenticationToken)authenticator;
+        }
+
         private T Send<T>(T body, Method method, string overrideUrl = null, IDictionary<string, object> requestParameters = null)
         {
             var relativeUrl = overrideUrl;
