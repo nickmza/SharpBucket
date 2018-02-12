@@ -103,12 +103,27 @@ namespace SharpBucket
             return (OAuthentication2)authenticator;
         }
 
-        public OAuthenticationToken OAuthenticationToken(string token)
+        public OAuthenticationToken OAuthenticationToken(string token, string consumerKey, string consumerSecretKey)
         {
-            authenticator = new OAuthenticationToken(token, _baseUrl);
-            ((OAuthenticationToken)authenticator).GetToken();
+            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
+            ((OAuthenticationToken)authenticator).SetToken(token);
             return (OAuthenticationToken)authenticator;
         }
+
+        public OAuthenticationToken OAuthenticationCode(string code, string consumerKey, string consumerSecretKey)
+        {
+            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
+            ((OAuthenticationToken)authenticator).GetTokenFromCode(code);
+            return (OAuthenticationToken)authenticator;
+        }
+
+        public OAuthenticationToken OAuthenticationRefresh(string refreshToken, string consumerKey, string consumerSecretKey)
+        {
+            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
+            ((OAuthenticationToken)authenticator).GetTokenFromRefreshToken(refreshToken);
+            return (OAuthenticationToken)authenticator;
+        }
+
 
         private T Send<T>(T body, Method method, string overrideUrl = null, IDictionary<string, object> requestParameters = null)
         {
