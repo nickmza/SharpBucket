@@ -86,6 +86,21 @@ namespace SharpBucket.V2.EndPoints
 
         #endregion
 
+        #region Web hook Resource
+
+        /// <summary>
+        /// Manage webhooks for a repository. 
+        /// More info:
+        /// https://confluence.atlassian.com/display/BITBUCKET/Webhook+Resource
+        /// </summary>
+        /// <returns></returns>
+        public WebhookResource WebhookResource()
+        {
+            return new WebhookResource(_accountName, _repository, _repositoriesEndPoint);
+        }
+
+        #endregion
+
         #region Branch Restrictions Resource
 
         /// More info:
