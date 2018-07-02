@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SharpBucket.V2.Pocos
 {
-    public class WebhookSubscriptions: IteratorBasedPage<WebhookSubscription>
+    public class WebhookSubscriptions: ListBasedPage<WebhookSubscription>
     {
 
     }

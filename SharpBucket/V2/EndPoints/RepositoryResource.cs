@@ -94,7 +94,7 @@ namespace SharpBucket.V2.EndPoints
         /// https://confluence.atlassian.com/display/BITBUCKET/Webhook+Resource
         /// </summary>
         /// <returns></returns>
-        public WebhookResource WebhookResource()
+        public WebhookResource GetWebhookResource()
         {
             return new WebhookResource(_accountName, _repository, _repositoriesEndPoint);
         }

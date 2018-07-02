@@ -21,6 +21,13 @@ namespace SharpBucket.V2.EndPoints
         {
         }
 
+        public WebhookResource WebhookResource()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
         /// <summary>
         /// List of repositories associated with an account. If the caller is properly authenticated and authorized, 
         /// this method returns a collection containing public and private repositories. 
@@ -357,5 +364,34 @@ namespace SharpBucket.V2.EndPoints
         }
 
         #endregion
+
+        #region Web hooks
+        /// <summary>
+        /// Use this resource to get webhook subscriptions
+        /// More info:
+        /// https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D/hooks#get
+        /// </summary>
+        /// <param name="accountName">The owner of the repository.</param>
+        /// <param name="repository">The repository slug.</param>
+        /// <returns></returns>
+        public List<WebhookSubscription> GetWebhook(string username, string repository, int max = 0)
+        {
+            var overrideUrl = GetRepositoryUrl(username, repository, "hooks/");
+            return GetPaginatedValues<WebhookSubscription>(overrideUrl, max);
+        }
+        internal WebhookSubscription PostWebhook(string username, string repository, string description, string url, bool active, string[] events)
+        {
+            var overrideUrl = GetRepositoryUrl(username, repository, "hooks/");
+            return _sharpBucketV2.Post(new WebhookSubscription()
+                {
+                    description = description, 
+                    url = url,
+                    active = active,
+                    events = events
+                }, overrideUrl);
+        }
+
+        #endregion
+
     }
 }
