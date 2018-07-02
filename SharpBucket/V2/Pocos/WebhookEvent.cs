@@ -1,4 +1,4 @@
-﻿namespace SharpBucket.V2.EndPoints
+﻿namespace SharpBucket.V2.Pocos
 {
     public static class WebhookEvent
     {
