@@ -391,7 +391,7 @@ namespace SharpBucket.V2.EndPoints
                 active = active,
                 events = eventsList
             };
-            return _sharpBucketV2.Post<WebhookSubscription>(hook, overrideUrl);
+            return _sharpBucketV2.PostWithJsonBody<WebhookSubscription>(hook, overrideUrl);
         }
         #endregion
 

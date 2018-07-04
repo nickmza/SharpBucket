@@ -118,6 +118,21 @@ namespace SharpBucket
             }
             return response;
         }
+        private T SendWithJsonBody<T>(T body, Method method, string overrideUrl = null, IDictionary<string, object> requestParameters = null)
+        {
+            var relativeUrl = overrideUrl;
+            T response;
+            try
+            {
+                response = authenticator.GetResponse(relativeUrl, method, body, requestParameters);
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine(ex.Message);
+                response = default(T);
+            }
+            return response;
+        }
 
         internal T Get<T>(T body, string overrideUrl, object requestParameters = null)
         {
@@ -129,6 +144,10 @@ namespace SharpBucket
         internal T Post<T>(T body, string overrideUrl)
         {
             return Send(body, Method.POST, overrideUrl);
+        }
+        internal T PostWithJsonBody<T>(T body, string overrideUrl)
+        {
+            return SendWithJsonBody(body, Method.POST, overrideUrl);
         }
 
         internal T Put<T>(T body, string overrideUrl)
