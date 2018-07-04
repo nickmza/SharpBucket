@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using RestSharp;
@@ -10,8 +11,17 @@ namespace SharpBucket.Authentication
     {
         internal const string BITBUCKET_URL_V1 = "https://bitbucket.org/api/1.0";
         internal const string BITBUCKET_URL_V2 = "https://api.bitbucket.org/2.0";
-        public static T ExecuteRequest<T>(string url, Method method, T body, RestClient client, IDictionary<string, object> requestParameters)
-            where T : new()
+                
+        public static T ExecuteRequestWithJsonBody<T>(string url, Method method, T body, RestClient client, IDictionary<string, object> requestParameters) where T : new()
+        {
+            return InternalExecute<T>(url, method, body, client, requestParameters, AddBodyWithJson);
+        }
+
+        public static T ExecuteRequest<T>(string url, Method method, T body, RestClient client, IDictionary<string, object> requestParameters) where T : new()
+        {
+            return InternalExecute<T>(url, method, body, client, requestParameters, AddBody);
+        }
+        internal static T InternalExecute<T>(string url, Method method, T body, RestClient client, IDictionary<string, object> requestParameters, Action<T, RestRequest> addBodyAction) where T : new()
         {
             var request = new RestRequest(url, method);
             if (requestParameters != null)
@@ -25,7 +35,7 @@ namespace SharpBucket.Authentication
             if (ShouldAddBody(method))
             {
                 request.RequestFormat = DataFormat.Json;
-                request.AddObject(body);
+                addBodyAction(body, request);
             }
 
             //Fixed bug that prevents RestClient for adding custom headers to the request
@@ -46,6 +56,16 @@ namespace SharpBucket.Authentication
                 return result.Content as dynamic;
             }
             return result.Data;
+        }
+
+        private static void AddBodyWithJson<T>(T body, RestRequest request) where T : new()
+        {
+            request.AddJsonBody(body);
+        }
+
+        private static void AddBody<T>(T body, RestRequest request) where T : new()
+        {
+            request.AddBody(body);
         }
 
         private static IRestResponse<T> ExectueRequest<T>(Method method, RestClient client, RestRequest request)

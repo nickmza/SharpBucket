@@ -103,29 +103,22 @@ namespace SharpBucket
             return (OAuthentication2)authenticator;
         }
 
-        public OAuthenticationToken OAuthenticationToken(string token, string consumerKey, string consumerSecretKey)
-        {
-            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
-            ((OAuthenticationToken)authenticator).SetToken(token);
-            return (OAuthenticationToken)authenticator;
-        }
-
-        public OAuthenticationToken OAuthenticationCode(string code, string consumerKey, string consumerSecretKey)
-        {
-            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
-            ((OAuthenticationToken)authenticator).GetTokenFromCode(code);
-            return (OAuthenticationToken)authenticator;
-        }
-
-        public OAuthenticationToken OAuthenticationRefresh(string refreshToken, string consumerKey, string consumerSecretKey)
-        {
-            authenticator = new OAuthenticationToken(_baseUrl, consumerKey, consumerSecretKey);
-            ((OAuthenticationToken)authenticator).GetTokenFromRefreshToken(refreshToken);
-            return (OAuthenticationToken)authenticator;
-        }
-
-
         private T Send<T>(T body, Method method, string overrideUrl = null, IDictionary<string, object> requestParameters = null)
+        {
+            var relativeUrl = overrideUrl;
+            T response;
+            try
+            {
+                response = authenticator.GetResponse(relativeUrl, method, body, requestParameters);
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine(ex.Message);
+                response = default(T);
+            }
+            return response;
+        }
+        private T SendWithJsonBody<T>(T body, Method method, string overrideUrl = null, IDictionary<string, object> requestParameters = null)
         {
             var relativeUrl = overrideUrl;
             T response;
@@ -151,6 +144,10 @@ namespace SharpBucket
         internal T Post<T>(T body, string overrideUrl)
         {
             return Send(body, Method.POST, overrideUrl);
+        }
+        internal T PostWithJsonBody<T>(T body, string overrideUrl)
+        {
+            return SendWithJsonBody(body, Method.POST, overrideUrl);
         }
 
         internal T Put<T>(T body, string overrideUrl)

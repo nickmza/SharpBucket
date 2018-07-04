@@ -99,5 +99,12 @@ namespace SharBucketTests.V2.EndPoints
             createdRepo.scm.ShouldBe("git");
             repositoryResource.DeleteRepository();
         }
+
+        [Test]
+        public void WebhookResource_returns_WebhookResource()
+        {
+            WebhookResource actual =  repositoryResource.GetWebhookResource() as WebhookResource;
+            Assert.IsNotNull(actual);
+        }
     }
 }
