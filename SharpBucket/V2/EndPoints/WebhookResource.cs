@@ -17,13 +17,13 @@ namespace SharpBucket.V2.EndPoints
             _repositoriesEndPoint = repositoriesEndPoint;
         }
 
-        public List<WebhookSubscription> Get(string username, string repository)
+        public List<WebhookSubscription> Get(string accountName, string repository)
         {
-            return _repositoriesEndPoint.GetWebhook(username, repository);
+            return _repositoriesEndPoint.GetWebhook(accountName, repository);
         }
-        public WebhookSubscription Post(string username, string repository, string description, string url, bool active, string[] webhookEvents)
+        public WebhookSubscription Post(string accountName, string repository, string description, string url, bool active, string[] events)
         {
-            return _repositoriesEndPoint.PostWebhook(username, repository, description, url, active, webhookEvents);
+            return _repositoriesEndPoint.PostWebhook(accountName, repository, description, url, active, events);
         }
     }
 }

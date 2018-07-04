@@ -374,23 +374,25 @@ namespace SharpBucket.V2.EndPoints
         /// <param name="accountName">The owner of the repository.</param>
         /// <param name="repository">The repository slug.</param>
         /// <returns></returns>
-        public List<WebhookSubscription> GetWebhook(string username, string repository, int max = 0)
+        public List<WebhookSubscription> GetWebhook(string accountName, string repository, int max = 0)
         {
-            var overrideUrl = GetRepositoryUrl(username, repository, "hooks/");
+            var overrideUrl = GetRepositoryUrl(accountName, repository, "hooks");
             return GetPaginatedValues<WebhookSubscription>(overrideUrl, max);
         }
         internal WebhookSubscription PostWebhook(string username, string repository, string description, string url, bool active, string[] events)
         {
-            var overrideUrl = GetRepositoryUrl(username, repository, "hooks/");
-            return _sharpBucketV2.Post(new WebhookSubscription()
-                {
-                    description = description, 
-                    url = url,
-                    active = active,
-                    events = events
-                }, overrideUrl);
+            var overrideUrl = GetRepositoryUrl(username, repository, "hooks");
+            List<string> eventsList = new List<string>();
+            eventsList.AddRange(events);
+            var hook = new WebhookSubscription()
+            {
+                description = description,
+                url = url,
+                active = active,
+                events = eventsList
+            };
+            return _sharpBucketV2.Post<WebhookSubscription>(hook, overrideUrl);
         }
-
         #endregion
 
     }
