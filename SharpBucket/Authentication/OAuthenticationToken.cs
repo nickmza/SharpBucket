@@ -18,6 +18,8 @@ namespace SharpBucket.Authentication
 
         public string RefreshToken { get; private set; }
 
+        public string AccessToken { get; private set; }
+
         public OAuthenticationToken(string baseUrl, string consumerKey, string consumerSecret)
             : base(consumerKey, consumerSecret, baseUrl)
         {
@@ -49,6 +51,7 @@ namespace SharpBucket.Authentication
             });
 
             var token = response.AccessToken;
+            AccessToken = token;
             RefreshToken = response.RefreshToken;
 
             CreateClientWithToken(token);
@@ -63,6 +66,7 @@ namespace SharpBucket.Authentication
             });
 
             var token = response.AccessToken;
+            AccessToken = token;
             RefreshToken = response.RefreshToken;
 
             CreateClientWithToken(token);
